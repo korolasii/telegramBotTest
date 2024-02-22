@@ -31,7 +31,7 @@ public class Main extends TelegramLongPollingBot {
 
         System.out.println(sendMessage);
 
-        if (userMessageText.startsWith("/start")){
+        if (userMessageText.equals("/start")){
             sendMessage.setText("Добро пожаловать напишите город В котором хотите узнать погоду");
             SendToDb.addToBase(Integer.parseInt(sendMessage.getChatId()), userMessageText, "Добро пожаловать напишите город В котором хотите узнать погоду");
             try {
@@ -39,6 +39,16 @@ public class Main extends TelegramLongPollingBot {
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
+        }else if(userMessageText.equals("Последняя запись")){
+            String response = SendToDb.getLastEntry();
+            sendMessage.setText(response);
+            SendToDb.addToBase(Integer.parseInt(sendMessage.getChatId()), userMessageText, response);
+            try {
+                execute(sendMessage);
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+
         }else{
             String weather = Weather.getWeather(userMessageText);
             sendMessage.setText(weather);
